@@ -1,0 +1,9 @@
+---
+:word: !ruby/object:Word
+  word: fairfield
+  letters_count: 9
+  hidden_word: "-ai--i---"
+:fails: 2
+:previous_letters:
+- o
+- s

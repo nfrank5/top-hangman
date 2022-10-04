@@ -133,5 +133,5 @@ class Game
   end
 end
 
-new_game = Game.new()
-new_game.play_game()
+new_game = Game.new
+new_game.play_game

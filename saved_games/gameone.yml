@@ -1,0 +1,8 @@
+---
+:word: !ruby/object:Word
+  word: interactive
+  letters_count: 11
+  hidden_word: inte---ti-e
+:fails: 1
+:previous_letters:
+- A

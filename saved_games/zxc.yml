@@ -1,7 +1,0 @@
---- !ruby/object:Game
-word: !ruby/object:Word
-  word: accepts
-  letters_count: 7
-  hidden_word: acc----
-fails: 0
-previous_letters: []
