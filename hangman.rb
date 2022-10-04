@@ -13,26 +13,25 @@ module Graphics
 
   def board
     clear_screen
-    p @word.word
     puts "#{@word.hidden_word} \n(The word has #{@word.letters_count} letters.)"
     puts "You have #{7 - @fails} #{7 - @fails == 1 ? 'guess' : 'guesses'} left"
     puts "Your wrong guesses: #{@previous_letters}"
-    puts @word.hidden_word
   end
 end
 
 module Data
-  def save_game()
+  def save_games
     ans = string_input('Do you want to save the game?(Y/N)', /^[yn]$/)
     if(ans == 'y')
-      serialized_game = YAML.dump({
-        word: @word,
+      game_name = string_input('Enter a name to save the game(Lowercase, 3 to 10 letters): ', /^[a-zA-Z]{3,10}$/)
+      file = File.open("saved_games/#{game_name}.yml", 'w')
+      file.puts YAML.dump({
+        word: @word, 
         fails: @fails,
-        previous_letters: @previous_letters
+        previous_letters: @previous_letters 
       })
-      file = File.open("sample.yml", "w")
-      file.puts serialized_game
       file.close
+      puts "The game was saved with the name: #{game_name}\nThank you for playing"
     end
     ans == 'y'
   end
@@ -40,10 +39,23 @@ module Data
   def load_game
     ans = string_input('Do you want to load a saved Game?(Y/N)', /^[yn]$/)
     return unless ans == 'y'
-    file = YAML.load_file('sample.yml', permitted_classes: [Symbol, Word])
-    @word = file[:word]
-    @fails = file[:fails]
-    @previous_letters = file[:previous_letters]
+    
+    Dir.glob('*/*.yml').each do | file | 
+      puts file.split('/')[1].split('.')[0]
+    end
+    game_name = gets.chomp
+
+    Dir.glob('*/*.yml').each do | file | 
+      if(file == "saved_games/#{game_name}.yml")
+        file = YAML.load_file("saved_games/#{game_name}.yml", permitted_classes: [Symbol, Word])
+        @word = file[:word]
+        @fails = file[:fails]
+        @previous_letters = file[:previous_letters]
+        break
+      end
+    end
+
+    ans == 'y'
   end
 
   def string_input(message, regex)
@@ -83,7 +95,7 @@ end
 class Game
   include Graphics
   include Data
-
+  
   def initialize
     @word = Word.new
     @fails = 0
@@ -93,7 +105,7 @@ class Game
   def player_input
     guess_letter = string_input('Please insert one letter: ', /^[a-zA-Z]$/)
     indexes_guess_letter = (0...@word.word.length).find_all { |i| @word.word[i,1] == guess_letter }
-    @word.hidden_word.split("").each_with_index do |dash, i|
+    @word.hidden_word.split('').each_with_index do |dash, i|
       if indexes_guess_letter.include? i
         @word.hidden_word[i] = guess_letter
       end
@@ -105,16 +117,19 @@ class Game
   end
   
   def play_game()
+    puts 'Welcome to Hangman!'
     load_game
-  
+
     while @word.hidden_word.include?('-') do
       board
       draw(@fails) if @fails.positive?
       break unless @fails < 7
-      break if save_game
+      return if save_games
+
       player_input
     end
-    #puts "The word is: #{@word.word}\nEnd of game"
+    puts @fails < 7 ? 'Congratulations! You won!' : 'You lose...'
+    puts "The word was: #{@word.word}\nThanks for playing!"
   end
 end
 

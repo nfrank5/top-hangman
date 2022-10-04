@@ -1,0 +1,9 @@
+---
+:word: !ruby/object:Word
+  word: periodic
+  letters_count: 8
+  hidden_word: "----o---"
+:fails: 2
+:previous_letters:
+- s
+- a

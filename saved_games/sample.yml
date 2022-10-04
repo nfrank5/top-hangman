@@ -1,0 +1,16 @@
+---
+:game_name: asd
+:word: !ruby/object:Word
+  word: happen
+  letters_count: 6
+  hidden_word: "------"
+:fails: 0
+:previous_letters: []
+---
+:game_name: qwe
+:word: !ruby/object:Word
+  word: account
+  letters_count: 7
+  hidden_word: "-------"
+:fails: 0
+:previous_letters: []
